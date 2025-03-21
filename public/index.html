@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Search Bangs Service</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #1a1a1a; /* Dark background */
+                color: #f0f0f0; /* Light text color */
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                text-align: center; /* Center text */
+            }
+            h1 {
+                font-size: 2.5em;
+                margin-bottom: 0.5em;
+                color: #ffcc00; /* Bright yellow */
+            }
+            h2 {
+                font-size: 1.5em;
+                margin-bottom: 1em;
+                color: #00ccff; /* Bright cyan */
+            }
+            p {
+                font-size: 1em;
+                max-width: 600px;
+                line-height: 1.5;
+                color: #e0e0e0; /* Slightly lighter text */
+            }
+            .container {
+                background: #2a2a2a; /* Darker container */
+                padding: 2em;
+                border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+                transition: transform 0.3s;
+            }
+            .textbox {
+                width: 80%;
+                padding: 10px;
+                border: none;
+                border-radius: 5px;
+                font-size: 1em;
+                margin-top: 1em;
+                box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+                outline: none;
+            }
+            .link {
+                color: #ff5733; /* Vibrant red */
+                text-decoration: none;
+                font-weight: bold;
+                margin-top: 1em;
+                display: inline-block;
+                transition: text-shadow 0.3s;
+            }
+            .link:hover {
+                text-shadow:
+                    0 0 10px #ff5733,
+                    0 0 20px #ff5733; /* Glow effect */
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Search Bangs Service</h1>
+            <h2>Find What You Need Instantly!</h2>
+            <p>
+                Our service takes your search term and intelligently forwards it
+                to the correct site based on the bangs you use. Just type your
+                query with a bang (e.g., <code>!w</code> for Wikipedia,
+                <code>!g</code> for Google) and let us do the rest. Experience
+                seamless searching like never before!
+            </p>
+            <input
+                type="text"
+                class="textbox"
+                id="searchTerm"
+                placeholder="Enter your search term..."
+            />
+            <a href="#" class="link" onclick="openLink(event)">Search</a>
+        </div>
+
+        <script>
+            function openLink(event) {
+                event.preventDefault();
+                const searchTerm = document.getElementById("searchTerm").value;
+                const url = `http://localhost:8080/search?q=${encodeURIComponent(searchTerm)}`;
+                window.location.href = url; // Open the link in a new tab
+            }
+        </script>
+    </body>
+</html>

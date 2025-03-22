@@ -1,7 +1,10 @@
-# Intro
+# Introduction
 
-Insired by (unduck)[https://unduck.link].
+Inspired by [unduck](https://unduck.link).
 
-A customizable search rediretor in simple terms.
+A minimal search redirector implementing DuckDuckGo's bang system.
 
-It stores your prefrence in url.
+## To Do:
+
+- [ ] Enhance `index.html`
+- [ ] Implement user-defined bangs (potentially via cookies).

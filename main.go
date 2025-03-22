@@ -14,8 +14,9 @@ import (
 var index []byte
 
 func handleSearch(w http.ResponseWriter, req *http.Request) {
-	req.ParseForm()
-	query := req.Form.Get("q")
+	// req.ParseForm()
+	// query := req.Form.Get("q")
+	query := req.URL.Query().Get("q")
 
 	// fmt.Println("Got query params: ", req.RequestURI, query, req.Form)
 
@@ -24,7 +25,10 @@ func handleSearch(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	http.Redirect(w, req, getSearchUrl(query), http.StatusFound)
+	query = getSearchUrl(query)
+	log.Println("Redirecting to: ", query)
+
+	http.Redirect(w, req, query, http.StatusFound)
 }
 
 func main() {

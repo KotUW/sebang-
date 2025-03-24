@@ -47,7 +47,7 @@ func getSearchUrl(query string) string {
 	bangs := strings.Split(query, " ")
 	var r_url string
 
-	for _, word := range bangs {
+	for i, word := range bangs {
 		if strings.HasPrefix(word, "!") {
 			switch word {
 			case "!wiki":
@@ -64,12 +64,16 @@ func getSearchUrl(query string) string {
 				r_url = "http://golang.org/search?q=%s"
 			case "!pip":
 				r_url = "https://pypi.python.org/pypi?:action=search&term=%s&submit=search"
+			case "!gh":
+				r_url = "https://github.com/search?q=%s&type=repositories"
 			}
+			bangs[i] = ""
 		} else {
 			r_url = "https://google.com/search?q=%s"
 		}
+
 	}
 
-	res := fmt.Sprintf(r_url, url.PathEscape(query))
+	res := fmt.Sprintf(r_url, url.PathEscape(strings.Join(bangs, " ")))
 	return res
 }

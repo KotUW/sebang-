@@ -6,6 +6,7 @@ A minimal search redirector implementing DuckDuckGo's bang system.
 
 ## To Do:
 
-- [ ] Enhance `index.html`
-- [ ] Use go concurrency to make it faster and recover from error.
+- [x] Enhance `index.html`
+- [x] Use go concurrency to make it faster and recover from error.
+  By default, go does that.
 - [ ] Implement user-defined bangs (potentially via cookies).

@@ -3,96 +3,197 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Search Bangs Service</title>
+        <title>Banger Search</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
                 margin: 0;
                 padding: 0;
-                background-color: #1a1a1a; /* Dark background */
-                color: #f0f0f0; /* Light text color */
+                background-color: #202124;
+                color: #e8eaed;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .main-content {
+                flex-grow: 1;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                height: 100vh;
-                text-align: center; /* Center text */
+                margin-top: -100px;
             }
-            h1 {
-                font-size: 2.5em;
-                margin-bottom: 0.5em;
-                color: #ffcc00; /* Bright yellow */
-            }
-            h2 {
-                font-size: 1.5em;
-                margin-bottom: 1em;
-                color: #00ccff; /* Bright cyan */
-            }
-            p {
-                font-size: 1em;
-                max-width: 600px;
-                line-height: 1.5;
-                color: #e0e0e0; /* Slightly lighter text */
-            }
-            .container {
-                background: #2a2a2a; /* Darker container */
-                padding: 2em;
-                border-radius: 8px;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-                transition: transform 0.3s;
-            }
-            .textbox {
-                width: 80%;
-                padding: 10px;
-                border: none;
-                border-radius: 5px;
-                font-size: 1em;
-                margin-top: 1em;
-                box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-                outline: none;
-            }
-            .link {
-                color: #ff5733; /* Vibrant red */
-                text-decoration: none;
+
+            .logo {
+                font-size: 5em;
                 font-weight: bold;
-                margin-top: 1em;
-                display: inline-block;
-                transition: text-shadow 0.3s;
+                margin-bottom: 30px;
             }
-            .link:hover {
-                text-shadow:
-                    0 0 10px #ff5733,
-                    0 0 20px #ff5733; /* Glow effect */
+
+            .logo span:nth-child(1) {
+                color: #8ab4f8;
+            }
+            .logo span:nth-child(2) {
+                color: #f28b82;
+            }
+            .logo span:nth-child(3) {
+                color: #fdd663;
+            }
+            .logo span:nth-child(4) {
+                color: #8ab4f8;
+            }
+            .logo span:nth-child(5) {
+                color: #81c995;
+            }
+            .logo span:nth-child(6) {
+                color: #f28b82;
+            }
+
+            .search-container {
+                width: 580px;
+                max-width: 90%;
+                margin: 0 auto;
+            }
+
+            .search-box {
+                display: flex;
+                align-items: center;
+                border: 1px solid #5f6368;
+                border-radius: 24px;
+                padding: 0 14px;
+                height: 44px;
+                background-color: #303134;
+                box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+                transition: all 0.3s;
+            }
+
+            .search-box:hover,
+            .search-box:focus-within {
+                background-color: #303134;
+                box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+                border-color: #8ab4f8;
+            }
+
+            .search-icon {
+                color: #9aa0a6;
+                margin-right: 10px;
+                font-size: 18px;
+            }
+
+            .search-input {
+                flex-grow: 1;
+                border: none;
+                outline: none;
+                font-size: 16px;
+                padding: 0;
+                height: 34px;
+                background-color: transparent;
+                color: #e8eaed;
+            }
+
+            .search-input::placeholder {
+                color: #9aa0a6;
+            }
+
+            .button-container {
+                margin-top: 20px;
+                display: flex;
+                justify-content: center;
+            }
+
+            .search-button {
+                background-color: #303134;
+                border: 1px solid #5f6368;
+                border-radius: 4px;
+                color: #e8eaed;
+                font-size: 14px;
+                margin: 11px 4px;
+                padding: 0 16px;
+                height: 36px;
+                cursor: pointer;
+                text-align: center;
+                user-select: none;
+            }
+
+            .search-button:hover {
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+                border-color: #8ab4f8;
+                background-color: #3c4043;
+            }
+
+            .footer {
+                background-color: #171717;
+                color: #9aa0a6;
+                padding: 15px;
+                font-size: 14px;
+                text-align: center;
+            }
+
+            .info-text {
+                margin-top: 30px;
+                width: 580px;
+                max-width: 90%;
+                color: #9aa0a6;
+                font-size: 14px;
+                text-align: center;
+            }
+
+            .info-text code {
+                background-color: #303134;
+                padding: 0 4px;
+                border-radius: 3px;
+                color: #8ab4f8;
             }
         </style>
     </head>
     <body>
-        <div class="container">
-            <h1>Search Bangs Service</h1>
-            <h2>Find What You Need Instantly!</h2>
-            <p>
-                Our service takes your search term and intelligently forwards it
-                to the correct site based on the bangs you use. Just type your
-                query with a bang (e.g., <code>!w</code> for Wikipedia,
-                <code>!g</code> for Google) and let us do the rest. Experience
-                seamless searching like never before!
-            </p>
-            <input
-                type="text"
-                class="textbox"
-                id="searchTerm"
-                placeholder="Enter your search term..."
-            />
-            <a href="#" class="link" onclick="openLink(event)">Search</a>
+        <div class="main-content">
+            <div class="logo">
+                <span>B</span><span>a</span><span>n</span><span>g</span
+                ><span>e</span><span>r</span>
+            </div>
+            <div class="search-container">
+                <div class="search-box">
+                    <div class="search-icon">🔍</div>
+                    <input
+                        type="text"
+                        class="search-input"
+                        id="searchTerm"
+                        placeholder="Search with bangs (e.g., !w for Wikipedia)"
+                        autofocus
+                    />
+                </div>
+                <div class="button-container">
+                    <button class="search-button" onclick="performSearch()">
+                        Banger Search
+                    </button>
+                </div>
+            </div>
+            <div class="info-text">
+                Use bangs to search directly: <code>!wiki</code> for Wikipedia,
+                <code>!g</code> for Google, and many more. Try it now!
+            </div>
+        </div>
+        <div class="footer">
+            Banger Search - Search more efficiently with bangs!
         </div>
 
         <script>
-            function openLink(event) {
-                event.preventDefault();
+            function performSearch() {
                 const searchTerm = document.getElementById("searchTerm").value;
                 const url = `http://localhost:8080/search?q=${encodeURIComponent(searchTerm)}`;
-                window.location.href = url; // Open the link in a new tab
+                window.location.href = url;
             }
+            // Add enter key functionality
+            document
+                .getElementById("searchTerm")
+                .addEventListener("keypress", function (event) {
+                    if (event.key === "Enter") {
+                        event.preventDefault();
+                        performSearch();
+                    }
+                });
         </script>
     </body>
 </html>

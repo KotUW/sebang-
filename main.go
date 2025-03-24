@@ -34,7 +34,7 @@ func handleSearch(w http.ResponseWriter, req *http.Request) {
 func main() {
 	fmt.Println("Started Server at ::1:8080")
 
-	http.HandleFunc("/search", handleSearch)
+	http.HandleFunc("/", handleSearch)
 
 	// http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 	// 	io.WriteString(w, string(index))

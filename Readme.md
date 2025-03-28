@@ -4,6 +4,17 @@ Inspired by [unduck](https://unduck.link).
 
 A minimal search redirector implementing DuckDuckGo's bang system.
 
+## Usage
+
+```sh
+go build
+```
+And,
+
+`./sebang`
+
+And you can access it using. `http://localhost:8080/`
+
 ## To Do:
 
 - [x] Enhance `index.html`

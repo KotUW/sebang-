@@ -4,6 +4,8 @@ Inspired by [unduck](https://unduck.link).
 
 A minimal search redirector implementing DuckDuckGo's bang system.
 
+![se-bang showcase.](./public/banger.gif)
+
 ## Usage
 
 ```sh

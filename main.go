@@ -46,25 +46,21 @@ func main() {
 }
 
 func getSearchUrl(query string) string {
-	r, err := regexp.Compile(` ![a-z]*`)
-	if err != nil {
-		log.Println("[ERROR] love, ")
-	}
+	geturl := func(query string) (string, string) {
+		r, _ := regexp.Compile(` ![a-z]*`)
+		match := r.FindString(query)
+		if match == "" {
+			return "https://google.com/search?q=%s", query
+		}
 
-	var r_url string
-	match := r.FindString(query)
-	// log.Println("MATCH:", bangs[strings.TrimSpace(match)])
-
-	if match == "" {
-		r_url = "https://google.com/search?q=%s"
-	} else {
-		r_url = bangs[strings.TrimSpace(strings.ToLower(match))]
+		r_url := bangs[strings.TrimSpace(strings.ToLower(match))]
 		query = strings.ReplaceAll(query, match, "")
 		if r_url == "" {
-			r_url = "https://google.com/search?q=%s"
+			return "https://google.com/search?q=%s", query
 		}
+		return r_url, query
 	}
-
-	res := fmt.Sprintf(r_url, url.PathEscape(query))
+	search_url, query := geturl(query)
+	res := fmt.Sprintf(search_url, url.PathEscape(query))
 	return res
 }

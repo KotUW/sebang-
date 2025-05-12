@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"regexp"
 	"strings"
 )
 
@@ -45,21 +46,25 @@ func main() {
 }
 
 func getSearchUrl(query string) string {
-	query_split := strings.Split(query, " ")
-	var r_url string
+	r, err := regexp.Compile(` ![a-z]*`)
+	if err != nil {
+		log.Println("[ERROR] love, ")
+	}
 
-	for i, word := range query_split {
-		if strings.HasPrefix(word, "!") {
-			r_url = bangs[word]
-			if r_url == "" {
-				r_url = "https://google.com/search?q=%s"
-			}
-			query_split[i] = "" //Remove the bang from query.
-		} else {
+	var r_url string
+	match := r.FindString(query)
+	// log.Println("MATCH:", bangs[strings.TrimSpace(match)])
+
+	if match == "" {
+		r_url = "https://google.com/search?q=%s"
+	} else {
+		r_url = bangs[strings.TrimSpace(strings.ToLower(match))]
+		query = strings.ReplaceAll(query, match, "")
+		if r_url == "" {
 			r_url = "https://google.com/search?q=%s"
 		}
 	}
 
-	res := fmt.Sprintf(r_url, url.PathEscape(strings.Join(query_split, " ")))
+	res := fmt.Sprintf(r_url, url.PathEscape(query))
 	return res
 }

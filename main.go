@@ -21,7 +21,7 @@ func handleSearch(w http.ResponseWriter, req *http.Request) {
 	// fmt.Println("Got query params: ", req.RequestURI, query, req.Form)
 
 	if query == "" {
-		io.WriteString(w, string(index))
+		http.Redirect(w, req, "/", http.StatusSeeOther)
 		return
 	}
 
@@ -34,13 +34,13 @@ func handleSearch(w http.ResponseWriter, req *http.Request) {
 func main() {
 	fmt.Println("Started Server at ::1:8080")
 
-	http.HandleFunc("/", handleSearch)
+	http.HandleFunc("/search/", handleSearch)
 
-	// http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-	// 	io.WriteString(w, string(index))
-	// })
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		io.WriteString(w, string(index))
+	})
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Println(http.ListenAndServe(":8080", nil))
 }
 
 func getSearchUrl(query string) string {
@@ -66,6 +66,8 @@ func getSearchUrl(query string) string {
 				r_url = "https://pypi.python.org/pypi?:action=search&term=%s&submit=search"
 			case "!gh":
 				r_url = "https://github.com/search?q=%s&type=repositories"
+			case "!gopkg":
+				r_url = "https://pkg.go.dev/search?q=%s"
 			}
 			bangs[i] = ""
 		} else {

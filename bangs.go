@@ -8,6 +8,7 @@ import (
 	"errors"
 	"log"
 	"os"
+	"strings"
 )
 
 type Bangs map[string]string
@@ -37,14 +38,20 @@ func init_bangs() Bangs {
 		return Bangs{}
 	}
 
+	log.Println("Imported Config from", config_path)
+
 	return bangs
 }
 
 func (b Bangs) add(key, url string) error {
+	// Verify that the kry start with `!`
+	if !strings.HasPrefix(key, "!") {
+		return errors.New("Invalid key")
+	}
+
 	if b[key] != "" {
 		return errors.New("Key already exist!. Dupilcated not allowed.")
 	}
-	// Verify that the kry start with `!`
 
 	b[key] = url
 	json, err := json.Marshal(b)

@@ -12,6 +12,7 @@ import (
 
 //go:embed "public/index.html"
 var index []byte
+var bangs = init_bangs()
 
 func handleSearch(w http.ResponseWriter, req *http.Request) {
 	// req.ParseForm()
@@ -32,7 +33,7 @@ func handleSearch(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	fmt.Println("Started Server at ::1:8080")
+	log.Println("Started Server at ::1:8080")
 
 	http.HandleFunc("/search/", handleSearch)
 
@@ -44,38 +45,21 @@ func main() {
 }
 
 func getSearchUrl(query string) string {
-	bangs := strings.Split(query, " ")
+	query_split := strings.Split(query, " ")
 	var r_url string
 
-	for i, word := range bangs {
+	for i, word := range query_split {
 		if strings.HasPrefix(word, "!") {
-			switch word {
-			case "!wiki":
-				r_url = "https://en.wikipedia.org/w/index.php?search=%s"
-			case "!cwen": // wikipedia - cite this page.
-				r_url = "https://en.wikipedia.org/wiki/Special:CiteThisPage?page=%s"
-			case "!yt":
-				r_url = "https://www.youtube.com/results?search_query=%s"
-			case "!tinyurl":
-				r_url = "https://tinyurl.com/create.php?source=indexpage&url=%s&submit=Make+TinyURL%21&alias="
-			case "!ddg":
-				r_url = "https://duckduckgo.com/?q=%s"
-			case "!go":
-				r_url = "http://golang.org/search?q=%s"
-			case "!pip":
-				r_url = "https://pypi.python.org/pypi?:action=search&term=%s&submit=search"
-			case "!gh":
-				r_url = "https://github.com/search?q=%s&type=repositories"
-			case "!gopkg":
-				r_url = "https://pkg.go.dev/search?q=%s"
+			r_url = bangs[word]
+			if r_url == "" {
+				r_url = "https://google.com/search?q=%s"
 			}
-			bangs[i] = ""
+			query_split[i] = "" //Remove the bang from query.
 		} else {
 			r_url = "https://google.com/search?q=%s"
 		}
-
 	}
 
-	res := fmt.Sprintf(r_url, url.PathEscape(strings.Join(bangs, " ")))
+	res := fmt.Sprintf(r_url, url.PathEscape(strings.Join(query_split, " ")))
 	return res
 }

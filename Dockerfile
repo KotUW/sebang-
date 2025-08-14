@@ -11,5 +11,7 @@ RUN go build -v -o /run-app .
 FROM scratch
 
 COPY --from=builder /run-app /usr/local/bin/
-COPY --from=builder --chmod=777 /usr/src/app/bangs.json /bangs.json
+COPY  --chmod=777 ./public/bangs.json /bangs.json
+ENV BANG_CONFIG_PATH=/bangs.json
 CMD ["run-app"]
+EXPOSE 8080

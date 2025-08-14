@@ -13,16 +13,25 @@ import (
 
 //go:embed "public/index.html"
 var index []byte
-var bangs = init_bangs()
+var bangs = Newbangs()
 
 func handleSearch(w http.ResponseWriter, req *http.Request) {
-	// req.ParseForm()
-	// query := req.Form.Get("q")
 	query := req.URL.Query().Get("q")
+	// userBangs := false
 
-	// fmt.Println("Got query params: ", req.RequestURI, query, req.Form)
+	// // fmt.Println("Got query params: ", req.RequestURI, query, req.Form)
 
-	if query == "" {
+	// cook, err := req.Cookie("user_bangs")
+	// if err == nil {
+	// 	userBangs = true
+	// 	log.Println("Cookie Value: ", cook.Value)
+	// }
+
+	// if userBangs {
+	// 	log.Println("Is the bang inside user bangs?")
+	// }
+
+	if query == "" { // User enter emty search string
 		http.Redirect(w, req, "/", http.StatusSeeOther)
 		return
 	}
@@ -34,33 +43,33 @@ func handleSearch(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
+	log.SetPrefix("[Banger Search] ")
 	log.Println("Started Server at ::1:8080")
 
 	http.HandleFunc("/search/", handleSearch)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		io.WriteString(w, string(index))
+		_, err := io.Writer.Write(w, index)
+		if err != nil {
+			log.Println("[ERROR] Trying to send index page:", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 	})
 
 	log.Println(http.ListenAndServe(":8080", nil))
 }
 
 func getSearchUrl(query string) string {
-	geturl := func(query string) (string, string) {
-		r, _ := regexp.Compile(` ![a-z]*`)
-		match := r.FindString(query)
-		if match == "" {
-			return "https://google.com/search?q=%s", query
-		}
-
-		r_url := bangs[strings.TrimSpace(strings.ToLower(match))]
-		query = strings.ReplaceAll(query, match, "")
-		if r_url == "" {
-			return "https://google.com/search?q=%s", query
-		}
-		return r_url, query
+	r, _ := regexp.Compile(`(^| )![a-z]*`)
+	match := r.FindString(query)
+	if match == "" {
+		// Redirect to Bangs.default
+		return fmt.Sprintf(bangs.Default, url.PathEscape(query))
 	}
-	search_url, query := geturl(query)
-	res := fmt.Sprintf(search_url, url.PathEscape(query))
+
+	searchUrl := bangs.Query(strings.TrimSpace(strings.ToLower(match)))
+
+	query = strings.Replace(query, match, "", 1)
+	res := fmt.Sprintf(searchUrl, url.PathEscape(query))
 	return res
 }

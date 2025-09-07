@@ -6,7 +6,7 @@ import (
 )
 
 func TestInitBang(t *testing.T) {
-	bangs := Newbangs()
+	bangs := NewBangs()
 
 	err := bangs.Add("!go", "http://golang.org/search?q=%s")
 	if err == nil {

@@ -3,33 +3,23 @@ package main
 import (
 	_ "embed"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"net/url"
 	"regexp"
 	"strings"
+	"time"
 )
 
 //go:embed "public/index.html"
 var index []byte
-var bangs = Newbangs()
+
+// Global variables, so they are cached.
+var bangs = NewBangs()
+var bangRegex = regexp.MustCompile(`(^| )![a-z]*`)
 
 func handleSearch(w http.ResponseWriter, req *http.Request) {
 	query := req.URL.Query().Get("q")
-	// userBangs := false
-
-	// // fmt.Println("Got query params: ", req.RequestURI, query, req.Form)
-
-	// cook, err := req.Cookie("user_bangs")
-	// if err == nil {
-	// 	userBangs = true
-	// 	log.Println("Cookie Value: ", cook.Value)
-	// }
-
-	// if userBangs {
-	// 	log.Println("Is the bang inside user bangs?")
-	// }
 
 	if query == "" { // User enter emty search string
 		http.Redirect(w, req, "/", http.StatusSeeOther)
@@ -49,19 +39,27 @@ func main() {
 	http.HandleFunc("/search/", handleSearch)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		_, err := io.Writer.Write(w, index)
-		if err != nil {
-			log.Println("[ERROR] Trying to send index page:", err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		if _, err := w.Write(index); err != nil {
+			log.Printf("[ERROR] Failed to send index page: %v", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		}
 	})
 
-	log.Println(http.ListenAndServe(":8080", nil))
+	// Configure server with better defaults
+	server := &http.Server{
+		Addr:         ":8080",
+		ReadTimeout:  15 * time.Second,
+		WriteTimeout: 15 * time.Second,
+		IdleTimeout:  60 * time.Second,
+		Handler:      nil,
+	}
+
+	log.Fatal(server.ListenAndServe())
 }
 
 func getSearchUrl(query string) string {
-	r, _ := regexp.Compile(`(^| )![a-z]*`)
-	match := r.FindString(query)
+	match := bangRegex.FindString(query)
 	if match == "" {
 		// Redirect to Bangs.default
 		return fmt.Sprintf(bangs.Default, url.PathEscape(query))

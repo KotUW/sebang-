@@ -6,6 +6,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -38,18 +39,19 @@ type Bangs struct {
 	Bang    map[string]string
 }
 
-func Newbangs() *Bangs {
+func NewBangs() *Bangs {
 	cont := getConfig()
-	bangs := Bangs{}
-
-	err := json.Unmarshal(cont, &bangs)
-	//Caution: Will unmarshal a valid json file that doesn't have any fields.
-	if err != nil {
-		log.Println("Can't parse json. May be corrpted. ", err)
-		return &Bangs{}
+	bangs := &Bangs{
+		Bang: make(map[string]string),
 	}
 
-	return &bangs
+	//Caution: Will unmarshal a valid json file that doesn't have any fields.
+	if err := json.Unmarshal(cont, bangs); err != nil {
+		log.Println("Can't parse json. May be corrpted. ", err)
+		bangs.Default = "https://www.google.com/search?q=%s"
+	}
+
+	return bangs
 }
 
 // Returns either the site releated to query or default site.
@@ -65,21 +67,26 @@ func (b *Bangs) Query(query string) string {
 func (b *Bangs) Add(key, url string) error {
 	// Verify that the kry start with `!`
 	if !strings.HasPrefix(key, "!") {
-		return errors.New("Invalid key")
+		return errors.New("Invalid key: must start with '!'")
 	}
 
-	_, ok := b.Bang[key]
-	if ok {
+	if _, exists := b.Bang[key]; exists {
 		return errors.New("Key already exist!. Dupilcation not allowed.")
 	}
 
-	b.Bang[key] = url
-	json, err := json.Marshal(b)
+	return b.saveConfig()
+}
+
+func (b *Bangs) saveConfig() error {
+	data, err := json.Marshal(b)
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed to marshal new json: %w", err)
 	}
+
 	config_path := configPath()
 
-	os.WriteFile(config_path, json, 0644)
+	if err := os.WriteFile(config_path, data, 0644); err != nil {
+		return fmt.Errorf("Failed to write %s. Coz: %w", config_path, err)
+	}
 	return nil
 }

@@ -22,4 +22,4 @@ And you can access it using. `http://localhost:8080/`
 - [x] Enhance `index.html`
 - [x] Use go concurrency to make it faster and recover from error.
   By default, go does that.
-- [ ] Implement user-defined bangs (potentially via cookies).
+- [ ] Modify bangs configuration at runtime. Make sure to write it back. As it's safer if it's on disk.

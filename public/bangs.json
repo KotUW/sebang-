@@ -1,7 +1,8 @@
 {
-  "Default": "https://www.ecosia.org/search?q=%s",
+  "Default": "https://www.mojeek.com/search?q=%s",
   "Bang": {
     "!cwen": "https://en.wikipedia.org/wiki/Special:CiteThisPage?page=%s",
+    "!w": "https://www.wikipedia.org/wiki/%s",
     "!gh": "https://github.com/search?q=%s&type=repositories",
     "!go": "http://golang.org/search?q=%s",
     "!gopkg": "https://pkg.go.dev/search?q=%s",
@@ -12,6 +13,8 @@
     "!archive": "https://archive.ph/%s",
     "!kagi": "https://kagi.com/search?q=%s",
     "!g": "https://google.com/search?q=%s",
-    "!eco": "https://www.ecosia.org/search?q=%s"
+    "!ecosia": "https://www.ecosia.org/search?q=%s",
+    "!mojeek": "https://www.mojeek.com/search?q=%s",
+    "!marginalia": "https://marginalia-search.com/search?query=%s&profile=corpo"
   }
 }
